@@ -12,6 +12,8 @@ import { loadSample } from '../lib/samples.js';
 import { analyseContract } from '../lib/claude.js';
 
 // ── Env (same per-project pattern as scripts/test-triage.ts) ──────────────
+const SECRET_KEYS = ['ANTHROPIC_API_KEY'];
+
 const envPath = path.resolve(
   process.cwd(),
   '../../../../secretsecrets/contract-triage.env',
@@ -19,8 +21,10 @@ const envPath = path.resolve(
 
 try {
   const parsed = parseEnv(readFileSync(envPath, 'utf-8'));
-  if (parsed.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY) {
-    process.env.ANTHROPIC_API_KEY = parsed.ANTHROPIC_API_KEY;
+  for (const key of SECRET_KEYS) {
+    if (parsed[key] && !process.env[key]) {
+      process.env[key] = parsed[key];
+    }
   }
 } catch (err) {
   console.error(

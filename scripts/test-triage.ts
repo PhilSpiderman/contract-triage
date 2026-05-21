@@ -8,8 +8,10 @@ import { parse as parseEnv } from 'dotenv';
 import { loadSample } from '../lib/samples.js';
 import { analyseContract } from '../lib/claude.js';
 
-// Load ONLY ANTHROPIC_API_KEY from this project's dedicated secrets file.
+// Load named secrets from this project's dedicated file.
 // dotenv.parse() reads into a local object — other entries never reach process.env.
+const SECRET_KEYS = ['ANTHROPIC_API_KEY'];
+
 const envPath = path.resolve(
   process.cwd(),
   '../../../../secretsecrets/contract-triage.env',
@@ -17,8 +19,10 @@ const envPath = path.resolve(
 
 try {
   const parsed = parseEnv(readFileSync(envPath, 'utf-8'));
-  if (parsed.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY) {
-    process.env.ANTHROPIC_API_KEY = parsed.ANTHROPIC_API_KEY;
+  for (const key of SECRET_KEYS) {
+    if (parsed[key] && !process.env[key]) {
+      process.env[key] = parsed[key];
+    }
   }
 } catch (err) {
   console.error(

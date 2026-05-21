@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { analyseContract } from '@/lib/claude';
+import { isDemoEnabled } from '@/lib/config';
 
 const MAX_CONTRACT_LENGTH = 100_000;
 
 export async function POST(req: NextRequest) {
+  if (!isDemoEnabled()) {
+    return NextResponse.json(
+      { error: 'The demo is currently paused.', code: 'DEMO_DISABLED' },
+      { status: 503 },
+    );
+  }
+
   let body: unknown;
   try {
     body = await req.json();

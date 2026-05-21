@@ -231,6 +231,28 @@ a {
   margin: 0;
 }
 
+/* ─── Demo paused banner ─── */
+.demo-paused-banner {
+  margin: 32px 0 0;
+  padding: 14px 18px;
+  background: var(--amber-bg);
+  border-left: 4px solid var(--amber-text);
+  border-radius: 0 4px 4px 0;
+  color: var(--amber-text);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.demo-paused-banner strong {
+  font-weight: 600;
+}
+
+.demo-paused-banner a {
+  color: var(--amber-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* ─── Error ─── */
 .error {
   margin-top: 24px;
@@ -495,6 +517,229 @@ a {
 .footer a:hover {
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+
+.footer-legal {
+  margin-top: 8px !important;
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+
+/* ─── Auth pages (signin, check-email, account) ─── */
+.auth-page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+}
+
+@media (max-width: 640px) {
+  .auth-page {
+    padding: 32px 16px 48px;
+  }
+}
+
+.auth-page h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.auth-blurb {
+  font-size: 0.9375rem;
+  color: var(--text-soft);
+  margin: 0 0 14px;
+  line-height: 1.55;
+}
+
+.auth-muted {
+  font-size: 0.875rem;
+  color: var(--text-faint);
+}
+
+.auth-muted code {
+  background: var(--surface);
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  font-size: 0.85em;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 28px 0 20px;
+}
+
+.auth-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.auth-input {
+  font: inherit;
+  font-size: 1rem;
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232, 114, 92, 0.18);
+}
+
+.auth-submit {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+
+.auth-submit:hover {
+  background: var(--accent-deep);
+}
+
+.auth-submit-secondary {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px solid var(--border-strong);
+  margin-top: 24px;
+}
+
+.auth-submit-secondary:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.auth-tos {
+  margin-top: 28px;
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+
+.auth-tos a {
+  color: var(--text-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-tos a:hover {
+  color: var(--accent);
+}
+
+/* ─── Legal pages (privacy, terms) ─── */
+.legal-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+  color: var(--text);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 640px) {
+  .legal-page {
+    padding: 32px 16px 48px;
+  }
+}
+
+.legal-back {
+  margin: 0 0 32px;
+  font-size: 0.875rem;
+}
+
+.legal-back a {
+  color: var(--text-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--text-faint);
+  transition: color 0.15s;
+}
+
+.legal-back a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.legal-draft-banner {
+  margin: 0 0 28px;
+  padding: 10px 14px;
+  background: var(--amber-bg);
+  border-left: 3px solid var(--amber-text);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.8125rem;
+  color: var(--amber-text);
+  line-height: 1.5;
+}
+
+.legal-draft-banner strong {
+  font-weight: 600;
+}
+
+.legal-page h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.legal-meta {
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+  margin: 0 0 28px;
+  font-family: ui-monospace, monospace;
+}
+
+.legal-page h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 36px 0 12px;
+}
+
+.legal-page p {
+  margin: 0 0 14px;
+}
+
+.legal-page ul {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.legal-page li {
+  margin-bottom: 6px;
+}
+
+.legal-page a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--text-faint);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s;
+}
+
+.legal-page a:hover {
+  text-decoration-color: var(--accent);
+}
+
+.legal-footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+  text-align: center;
 }
 
 /* ─── Mobile tweaks ─── */

@@ -4,7 +4,13 @@ import { useCallback, useState } from 'react';
 import type { Sample, TriageReport } from '@/lib/types';
 import { Report } from './report';
 
-export function TriageApp({ samples }: { samples: Sample[] }) {
+export function TriageApp({
+  samples,
+  demoEnabled,
+}: {
+  samples: Sample[];
+  demoEnabled: boolean;
+}) {
   const [selectedId, setSelectedId] = useState<string>(samples[0]?.id ?? '');
   const [analyzing, setAnalyzing] = useState(false);
   const [report, setReport] = useState<TriageReport | null>(null);
@@ -86,10 +92,18 @@ export function TriageApp({ samples }: { samples: Sample[] }) {
         </p>
       </section>
 
+      {!demoEnabled && (
+        <section className="demo-paused-banner">
+          <strong>Demo is paused right now.</strong> Analysis is temporarily
+          disabled — check back soon, or drop Chris a line at{' '}
+          <a href="mailto:chris@handsonwith.ai">chris@handsonwith.ai</a>.
+        </section>
+      )}
+
       <section className="analyze-section">
         <button
           className="analyze-button"
-          disabled={analyzing || !selectedSample}
+          disabled={analyzing || !selectedSample || !demoEnabled}
           onClick={handleAnalyze}
         >
           {analyzing ? 'analysing…' : 'analyse contract'}
@@ -121,6 +135,9 @@ export function TriageApp({ samples }: { samples: Sample[] }) {
           A working example by{' '}
           <a href="https://handsonwith.ai">Chris @ hands on with.ai</a>{' '}·{' '}
           <a href="https://github.com/PhilSpiderman/contract-triage">view source</a>
+        </p>
+        <p className="footer-legal">
+          <a href="/privacy">privacy</a> · <a href="/terms">terms</a>
         </p>
       </footer>
     </main>

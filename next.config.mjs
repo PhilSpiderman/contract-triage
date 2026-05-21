@@ -6,11 +6,18 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load ONLY ANTHROPIC_API_KEY from this project's dedicated secrets file.
-// We use dotenv.parse() (not dotenv.config()) so the file contents are parsed
-// into a local object and never auto-applied to process.env. We then copy
-// the single key we need. Any other entries in the file stay out of process
-// memory entirely.
+// Load secrets from this project's dedicated file. We use dotenv.parse() (not
+// dotenv.config()) so the file contents are parsed into a local object and
+// never auto-applied to process.env. We then copy only the named keys below.
+// Any other entries in the file stay out of process memory entirely.
+const SECRET_KEYS = [
+  'ANTHROPIC_API_KEY',
+  'RESEND_API_KEY',
+  'UPSTASH_REDIS_REST_URL',
+  'UPSTASH_REDIS_REST_TOKEN',
+  'AUTH_SECRET',
+];
+
 const secretsPath = path.resolve(
   __dirname,
   '../../../../secretsecrets/contract-triage.env',
@@ -18,17 +25,19 @@ const secretsPath = path.resolve(
 
 try {
   const parsed = parseEnv(readFileSync(secretsPath, 'utf-8'));
-  if (parsed.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY) {
-    process.env.ANTHROPIC_API_KEY = parsed.ANTHROPIC_API_KEY;
+  for (const key of SECRET_KEYS) {
+    if (parsed[key] && !process.env[key]) {
+      process.env[key] = parsed[key];
+    }
   }
 } catch {
   // File missing (e.g. on Vercel) — env should already be set there.
 }
 
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.warn(
-    `[env] ANTHROPIC_API_KEY not set. Expected at ${secretsPath} or in process env.`,
-  );
+for (const key of SECRET_KEYS) {
+  if (!process.env[key]) {
+    console.warn(`[env] ${key} not set. Expected at ${secretsPath} or in process env.`);
+  }
 }
 
 /** @type {import('next').NextConfig} */
