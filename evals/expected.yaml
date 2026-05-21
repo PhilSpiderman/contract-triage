@@ -1,0 +1,38 @@
+# Ground truth for the eval set. Each entry says what the triage system
+# should return for the corresponding sample. The eval harness compares
+# the model output against these expectations.
+
+samples:
+  - id: 01-clean-nda
+    expected_verdict: standard
+    expected_flags: []
+    notes: All clauses match preferred or fall within acceptable variations.
+
+  - id: 02-mild-deviation-nda
+    expected_verdict: minor_deviation
+    expected_flags:
+      - confidentiality_term
+    notes: 7-year confidentiality term exceeds the 5-year acceptable ceiling.
+
+  - id: 03-mild-deviation-order
+    expected_verdict: minor_deviation
+    expected_flags:
+      - term
+    notes: 36-month initial term exceeds the 24-month acceptable ceiling. Everything else is clean.
+
+  - id: 04-needs-human-vendor
+    expected_verdict: needs_human
+    expected_flags:
+      - governing_law
+      - term
+      - liability_cap
+      - payment_terms
+      - exclusivity
+    notes: Delaware law, 3-year term, one-sided uncapped liability, 90-day payment terms, 24-month exclusivity. Multiple redlines.
+
+  - id: 05-needs-human-weird
+    expected_verdict: needs_human
+    expected_flags:
+      - ip_ownership
+      - confidentiality_term
+    notes: Full assignment of background IP (deal-breaker) plus perpetual confidentiality. Severity outweighs flag count.

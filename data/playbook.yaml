@@ -1,0 +1,183 @@
+# Contract review playbook — DEMO
+#
+# A generic UK SMB commercial contract playbook for demonstration purposes.
+# The positions reflect common SMB practice but are not legal advice. In a
+# real deployment, an in-house lawyer maintains this file directly — the AI
+# only matches incoming contracts against the positions defined here.
+#
+# Each entry describes:
+#   preferred         — wording we'd most like to see
+#   acceptable        — variations we accept without comment
+#   redline_if        — triggers that require pushback
+#   standard_redline  — the wording we'd typically propose back
+#   rationale         — why we hold this position
+
+version: "0.1"
+
+clauses:
+  - id: governing_law
+    label: Governing law and jurisdiction
+    preferred: >-
+      Governed by the laws of England and Wales, with exclusive jurisdiction
+      of the English courts.
+    acceptable:
+      - Scotland (laws and courts)
+      - Northern Ireland (laws and courts)
+    redline_if:
+      - Non-UK jurisdiction (US states, EU member states, offshore)
+      - Mandatory arbitration in a non-UK forum
+      - Foreign courts with exclusive jurisdiction
+    standard_redline: >-
+      Replace governing law with the laws of England and Wales and submit to
+      the exclusive jurisdiction of the English courts.
+    rationale: >-
+      We operate from the UK. Foreign jurisdiction introduces enforcement
+      cost and procedural risk we do not accept for routine commercial
+      contracts.
+
+  - id: term
+    label: Contract term and renewal
+    preferred: >-
+      Initial term of 12 months, auto-renewing for successive 12-month
+      periods unless either party gives at least 30 days' written notice
+      before the end of the current term.
+    acceptable:
+      - Initial term up to 24 months with 30+ day non-renewal notice
+      - One-off engagements with no auto-renewal
+    redline_if:
+      - Initial term greater than 24 months
+      - Auto-renewal with notice period shorter than 30 days
+      - Auto-renewal with no opt-out mechanism
+    standard_redline: >-
+      Reduce initial term to 12 months with auto-renewal for successive
+      12-month periods, terminable by either party on 30 days' written
+      notice before the end of the current term.
+    rationale: >-
+      Long lock-ins compound risk. 12-month terms with a clear exit are
+      standard for SMB commercial relationships.
+
+  - id: liability_cap
+    label: Liability cap
+    preferred: >-
+      Aggregate liability of both parties capped at the fees paid (or
+      payable) under the contract in the 12 months immediately preceding
+      the claim.
+    acceptable:
+      - Cap at total contract value
+      - Cap at fees paid in preceding 6 months (for low-value contracts)
+    redline_if:
+      - Uncapped liability for either party
+      - Liability capped at a multiple of fees greater than 1x annual
+      - One-sided cap (one party uncapped, the other capped)
+    standard_redline: >-
+      Cap aggregate liability of both parties at the fees paid by the
+      customer in the 12 months preceding the claim. Standard carve-outs
+      (death or personal injury, fraud, IP infringement, confidentiality
+      breach) sit above the cap.
+    rationale: >-
+      Uncapped exposure on commercial contracts is a non-starter. 12-month
+      fees is the SMB market standard. Mutual caps reflect mutual risk.
+
+  - id: ip_ownership
+    label: Intellectual property ownership
+    preferred: >-
+      Each party retains all pre-existing IP. The customer receives a
+      perpetual, non-exclusive licence to use the deliverables for their
+      internal business purposes. Background IP (tools, methods, templates)
+      remains with the supplier.
+    acceptable:
+      - Customer receives ownership of bespoke deliverables but supplier
+        retains background IP and a licence to re-use generic methods
+    redline_if:
+      - Assignment of supplier's background IP to the customer
+      - "Work made for hire" language transferring all IP
+      - Exclusive licences of supplier methods or templates
+    standard_redline: >-
+      Customer receives a perpetual non-exclusive licence to use the
+      deliverables. Supplier retains all background IP including tools,
+      methods, templates and underlying know-how.
+    rationale: >-
+      Our background IP is the business. Transferring it on a single
+      engagement destroys reuse value for every future client.
+
+  - id: confidentiality_term
+    label: Confidentiality term
+    preferred: >-
+      Confidentiality obligations last for 3 years from the date of
+      disclosure.
+    acceptable:
+      - Up to 5 years from date of disclosure
+      - Perpetual for trade secrets only (not all confidential information)
+    redline_if:
+      - Greater than 5 years for general confidential information
+      - Perpetual confidentiality across all information
+      - No expiry date stated (silent on duration)
+    standard_redline: >-
+      Confidentiality obligations to last 3 years from the date of
+      disclosure, with trade secrets remaining confidential for as long as
+      they remain secret.
+    rationale: >-
+      Perpetual confidentiality on general information is unenforceable in
+      practice and creates an indefinite admin burden. 3 years is market
+      standard for commercial NDAs.
+
+  - id: payment_terms
+    label: Payment terms
+    preferred: >-
+      Invoices payable within 30 days of issue, with statutory interest on
+      late payments.
+    acceptable:
+      - Net 14 days (faster)
+      - Net 45 days (for larger enterprise counterparties)
+    redline_if:
+      - Greater than 60 days
+      - Payment contingent on customer milestones outside supplier control
+      - No late payment provision
+    standard_redline: >-
+      Invoices payable within 30 days of issue. Statutory interest applies
+      to late payments under the Late Payment of Commercial Debts
+      (Interest) Act 1998.
+    rationale: >-
+      Cash flow matters for a small business. Net 30 is the UK SMB norm.
+      Net 90+ pushes risk onto the supplier.
+
+  - id: termination
+    label: Termination
+    preferred: >-
+      Either party may terminate for convenience on 30 days' written
+      notice. Either party may terminate immediately for material breach
+      not remedied within 14 days of notice.
+    acceptable:
+      - Termination for convenience with 14-60 day notice
+      - Termination for cause only (no for-convenience), provided the
+        contract term is short (under 6 months)
+    redline_if:
+      - No termination rights for either party
+      - For-convenience notice period greater than 90 days
+      - One-sided termination (only one party may terminate)
+    standard_redline: >-
+      Either party may terminate for convenience on 30 days' written
+      notice. Either party may terminate immediately for material breach
+      not remedied within 14 days of written notice.
+    rationale: >-
+      Long lock-ins and one-sided exits transfer power asymmetrically.
+      Mutual 30-day notice is standard.
+
+  - id: exclusivity
+    label: Exclusivity
+    preferred: >-
+      No exclusivity. Supplier may work with any other customer, including
+      competitors of the counterparty.
+    acceptable:
+      - Narrow non-solicit of named individuals for 6-12 months post-term
+    redline_if:
+      - Any exclusivity within a sector, geography, or customer category
+      - Non-compete clauses preventing supplier from working with
+        competitors
+      - Time-bound exclusivity longer than the contract term
+    standard_redline: >-
+      Remove the exclusivity provision. Supplier remains free to work with
+      other customers, including competitors of the counterparty.
+    rationale: >-
+      Exclusivity contradicts a generalist services model. Any exclusivity
+      clause gets pushed back regardless of contract value.

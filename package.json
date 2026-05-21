@@ -2,12 +2,14 @@
   "name": "contract-triage",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Contract triage assistant — a small AI demo for teams drowning in repetitive paperwork.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "evals": "tsx evals/run.ts"
+    "evals": "tsx evals/run.ts",
+    "test:triage": "tsx scripts/test-triage.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0",

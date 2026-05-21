@@ -1,0 +1,27 @@
+[
+  {
+    "id": "01-clean-nda",
+    "title": "Mutual NDA — Riverside Consulting",
+    "description": "A standard mutual NDA from a small consultancy. Everything matches preferred positions."
+  },
+  {
+    "id": "02-mild-deviation-nda",
+    "title": "Mutual NDA — Ashford Partners",
+    "description": "Mutual NDA with a 7-year confidentiality term — slightly beyond what the playbook prefers."
+  },
+  {
+    "id": "03-mild-deviation-order",
+    "title": "Order form — Northshire Logistics",
+    "description": "Order form with a 36-month initial term. Otherwise clean."
+  },
+  {
+    "id": "04-needs-human-vendor",
+    "title": "Master agreement — Halcyon Solutions Inc.",
+    "description": "US vendor agreement with multiple non-standard terms. Several redlines required."
+  },
+  {
+    "id": "05-needs-human-weird",
+    "title": "Order form — Ferncroft Estates",
+    "description": "Short order form with full IP transfer of background tools and perpetual confidentiality. Walk away or hard negotiate."
+  }
+]
