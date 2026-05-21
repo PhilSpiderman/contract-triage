@@ -9,7 +9,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Resend({
       apiKey: process.env.RESEND_API_KEY,
-      from: 'Chris @ hands on with.ai <noreply@get.handsonwith.ai>',
+      from: 'hands on with.ai <noreply@get.handsonwith.ai>',
       sendVerificationRequest: sendMagicLinkEmail,
     }),
   ],

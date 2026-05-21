@@ -7,7 +7,7 @@ interface SendVerificationParams {
   provider: { from?: string };
 }
 
-const FROM_DEFAULT = 'Chris @ hands on with.ai <noreply@get.handsonwith.ai>';
+const FROM_DEFAULT = 'hands on with.ai <noreply@get.handsonwith.ai>';
 const REPLY_TO = 'chris@handsonwith.ai';
 
 function textBody(url: string): string {

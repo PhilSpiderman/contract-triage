@@ -119,12 +119,12 @@ export default function PrivacyPage() {
       </p>
       <ul>
         <li>
-          <strong>Vercel</strong> — hosts the application. Servers in
-          Frankfurt, EU.
+          <strong>Vercel</strong> — hosts the application. Servers in London,
+          UK (or another EEA region).
         </li>
         <li>
           <strong>Upstash</strong> — provides the Redis database that stores
-          your account record. Hosted in Frankfurt, EU.
+          your account record. Hosted in London, UK.
         </li>
         <li>
           <strong>Resend</strong> — sends the magic-link email. They
