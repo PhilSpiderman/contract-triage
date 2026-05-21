@@ -2,18 +2,32 @@
 // Usage: npm run test:triage [sample-id]
 // Default sample: 01-clean-nda
 
-import { config as dotenvConfig } from 'dotenv';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { parse as parseEnv } from 'dotenv';
 import { loadSample } from '../lib/samples.js';
 import { analyseContract } from '../lib/claude.js';
 
-// Anchor on the project root (cwd when invoked via `npm run`).
-// Mirrors next.config.mjs so dev server and CLI resolve to the same .env.
-const envPath = path.resolve(process.cwd(), '../../../../secretsecrets/.env');
-const envResult = dotenvConfig({ path: envPath });
+// Load ONLY ANTHROPIC_API_KEY from this project's dedicated secrets file.
+// dotenv.parse() reads into a local object — other entries never reach process.env.
+const envPath = path.resolve(
+  process.cwd(),
+  '../../../../secretsecrets/contract-triage.env',
+);
 
-if (envResult.error && !process.env.ANTHROPIC_API_KEY) {
-  console.error(`Could not load env from ${envPath}: ${envResult.error.message}`);
+try {
+  const parsed = parseEnv(readFileSync(envPath, 'utf-8'));
+  if (parsed.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_API_KEY) {
+    process.env.ANTHROPIC_API_KEY = parsed.ANTHROPIC_API_KEY;
+  }
+} catch (err) {
+  console.error(
+    `Could not load env from ${envPath}: ${err instanceof Error ? err.message : err}`,
+  );
+}
+
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.error('ANTHROPIC_API_KEY is not set');
   process.exit(1);
 }
 
