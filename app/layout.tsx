@@ -1,6 +1,7 @@
 import './globals.css';
 import { Inter, Fraunces } from 'next/font/google';
 import type { Metadata } from 'next';
+import { isIndexingAllowed } from '@/lib/config';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
   title: 'contract triage — hands on with.ai',
   description:
     'A small AI demo for teams drowning in repetitive paperwork. Built as a working example by Chris @ hands on with.ai.',
+  robots: isIndexingAllowed() ? undefined : { index: false, follow: false },
 };
 
 export default function RootLayout({

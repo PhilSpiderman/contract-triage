@@ -19,3 +19,12 @@ export function isDemoEnabled(): boolean {
 export function isSignupEnabled(): boolean {
   return readFlag(process.env.SIGNUP_ENABLED);
 }
+
+// Indexing flag: inverted asymmetry. Search engines see a noindex meta tag
+// UNLESS ALLOW_INDEXING=true is set explicitly. Pre-launch this is OFF
+// everywhere; at launch, set ALLOW_INDEXING=true in Vercel and redeploy.
+// (Dev defaults to noindex too — localhost isn't crawled but no upside in
+// risking a leaked URL.)
+export function isIndexingAllowed(): boolean {
+  return process.env.ALLOW_INDEXING === 'true';
+}
