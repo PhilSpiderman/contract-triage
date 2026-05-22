@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import { signIn, auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import { signIn, auth } from '@/auth';
 import { isSignupEnabled } from '@/lib/config';
+import { storePendingLead } from '@/lib/leads';
+import { SignupForm } from './signup-form';
 
 export const metadata = {
   title: 'sign in — contract triage',
@@ -13,6 +15,26 @@ export default async function SignInPage() {
 
   const signupOpen = isSignupEnabled();
 
+  async function submitSignup(formData: FormData) {
+    'use server';
+
+    const email = String(formData.get('email') ?? '')
+      .trim()
+      .toLowerCase();
+    if (!email || !email.includes('@')) {
+      throw new Error('Please provide a valid email address.');
+    }
+
+    const name = String(formData.get('name') ?? '').trim();
+    const consent = formData.get('consent') === 'on';
+    const role = consent ? String(formData.get('role') ?? '').trim() : '';
+    const context = consent ? String(formData.get('context') ?? '').trim() : '';
+
+    await storePendingLead({ email, name, consent, role, context });
+
+    await signIn('resend', { email, redirectTo: '/account' });
+  }
+
   return (
     <main className="auth-page">
       <p className="legal-back">
@@ -22,7 +44,7 @@ export default async function SignInPage() {
       <h1>Sign in</h1>
       <p className="auth-blurb">
         Enter your email and I'll send you a sign-in link. No password to
-        remember, no account to create — just one click in your inbox.
+        remember — just one click in your inbox.
       </p>
 
       {!signupOpen ? (
@@ -32,29 +54,7 @@ export default async function SignInPage() {
           <a href="mailto:chris@handsonwith.ai">chris@handsonwith.ai</a>.
         </div>
       ) : (
-        <form
-          className="auth-form"
-          action={async (formData) => {
-            'use server';
-            await signIn('resend', formData);
-          }}
-        >
-          <label htmlFor="email" className="auth-label">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="you@example.com"
-            className="auth-input"
-          />
-          <button type="submit" className="auth-submit">
-            send sign-in link
-          </button>
-        </form>
+        <SignupForm action={submitSignup} />
       )}
 
       <p className="auth-tos">

@@ -26,6 +26,19 @@ Configure `privacy@handsonwith.ai` as an alias forwarded to `chris@handsonwith.a
 
 A separate Claude Code skill is being built that bakes in ICO guidance as a primary source. Once that skill exists, run both `/privacy` and `/terms` (and the wider data-handling architecture) through it for a more rigorous compliance review than the first-pass drafts I produced. Expect to revise wording, add anything missing, and align with whatever standard phrasing the skill enforces. Do this **before** the public URL goes live.
 
+### Broaden the retention trigger in the privacy policy
+
+Current wording in the privacy policy retention section says service data is deleted "12 months from your last use of the demo." Too narrow — starts the clock from when they stopped poking at the tool, ignoring genuine business interaction that should reset it too.
+
+**Change to:** 12 months from the most recent of (a) last use of the demo, or (b) last meaningful business interaction (email exchange, scoping call, project work). The intent is to retain contact details for the natural lifetime of any real working relationship, not arbitrarily nuke leads who actively engaged via channels other than the demo itself.
+
+**Files to update when implementing:**
+- `app/privacy/page.tsx` → the "How long I keep it" section
+- The cron-job design below needs a `last_active` field that updates on any recorded interaction, not just demo usage
+- Probably worth a small "last interaction" timestamp on the user record, updateable by the admin view (Phase 11)
+
+Re-review during the data-protection-skill pass — should be GDPR-defensible as long as the "meaningful interaction" definition is honest and documented.
+
 ### Cron job — auto-delete inactive accounts at 12 months
 
 The privacy policy commits to deleting account data 12 months after last activity. Need a scheduled job to enforce this:

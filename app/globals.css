@@ -567,8 +567,14 @@ a {
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   margin: 28px 0 20px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .auth-label {
@@ -577,6 +583,22 @@ a {
   letter-spacing: 0.08em;
   color: var(--text-faint);
   font-weight: 600;
+}
+
+.auth-required {
+  color: var(--accent);
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+.auth-optional {
+  color: var(--text-faint);
+  font-weight: 400;
+  text-transform: lowercase;
+  letter-spacing: 0;
+  margin-left: 6px;
+  font-size: 0.6875rem;
+  font-style: italic;
 }
 
 .auth-input {
@@ -623,6 +645,91 @@ a {
 .auth-submit-secondary:hover {
   background: var(--surface);
   color: var(--text);
+}
+
+.auth-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.auth-consent {
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.auth-consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.auth-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.auth-consent-fields {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-consent-intro {
+  font-size: 0.875rem;
+  color: var(--text-soft);
+  margin: 0;
+  font-style: italic;
+}
+
+.auth-profile {
+  margin: 28px 0;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.auth-profile-heading {
+  font-size: 0.75rem;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  margin: 0 0 14px;
+}
+
+.auth-profile-dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 18px;
+  font-size: 0.875rem;
+}
+
+.auth-profile-dl dt {
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.auth-profile-dl dd {
+  color: var(--text);
+  margin: 0;
+  word-break: break-word;
 }
 
 .auth-tos {
