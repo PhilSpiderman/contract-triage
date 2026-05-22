@@ -90,7 +90,7 @@ clauses:
         retains background IP and a licence to re-use generic methods
     redline_if:
       - Assignment of supplier's background IP to the customer
-      - "Work made for hire" language transferring all IP
+      - '"Work made for hire" language transferring all IP'
       - Exclusive licences of supplier methods or templates
     standard_redline: >-
       Customer receives a perpetual non-exclusive licence to use the

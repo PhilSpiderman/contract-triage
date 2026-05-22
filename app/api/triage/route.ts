@@ -4,6 +4,7 @@ import { analyseContract } from '@/lib/claude';
 import { isDemoEnabled } from '@/lib/config';
 import { loadSample } from '@/lib/samples';
 import { hasUserAnalysed, recordUserAnalysis } from '@/lib/rate-limit';
+import { getCachedReport, setCachedReport } from '@/lib/triage-cache';
 
 export async function POST(req: NextRequest) {
   // 1. Demo kill switch
@@ -57,10 +58,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 6. Run analysis
+  // 6. Per-sample cache hit — skip the Anthropic call, still spend the user's slot
+  const cached = await getCachedReport(sampleId);
+  if (cached) {
+    await recordUserAnalysis(userId, sampleId);
+    return NextResponse.json(cached);
+  }
+
+  // 7. Run analysis
   try {
     const report = await analyseContract(sample.text);
     await recordUserAnalysis(userId, sampleId);
+    await setCachedReport(sampleId, report);
     return NextResponse.json(report);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Analysis failed';
