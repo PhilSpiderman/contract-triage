@@ -16,6 +16,8 @@ const SECRET_KEYS = [
   'UPSTASH_REDIS_REST_URL',
   'UPSTASH_REDIS_REST_TOKEN',
   'AUTH_SECRET',
+  'TURNSTILE_SECRET_KEY',
+  'NEXT_PUBLIC_TURNSTILE_SITE_KEY',
 ];
 
 const secretsPath = path.resolve(

@@ -39,6 +39,22 @@ Current wording in the privacy policy retention section says service data is del
 
 Re-review during the data-protection-skill pass — should be GDPR-defensible as long as the "meaningful interaction" definition is honest and documented.
 
+### Swap Turnstile test keys for real ones at deploy time
+
+Dev currently uses Cloudflare's documented "always-passes" test keys (`1x00000000000000000000AA` site key + matching secret). These work without any Cloudflare account setup, so dev is unblocked, but they offer zero bot protection. Before public launch:
+
+1. **Cloudflare dashboard → Turnstile → Add Site**
+2. Site name: `contract-triage` (or similar)
+3. Hostnames: add both `localhost` (for local dev parity if useful) and `triage.handsonwith.ai`
+4. Widget mode: **Managed** (Cloudflare decides invisible vs interactive based on risk score)
+5. Copy the **site key** and **secret key**
+6. **In Vercel** (production env vars only — keep dev on the test keys for local iteration):
+   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY=<real site key>`
+   - `TURNSTILE_SECRET_KEY=<real secret key>`
+7. Redeploy
+
+Test by signing up from a clean browser session — widget should appear briefly (or not at all if Cloudflare decides invisibly), submission should succeed. Bot signups should be blocked.
+
 ### Cron job — auto-delete inactive accounts at 12 months
 
 The privacy policy commits to deleting account data 12 months after last activity. Need a scheduled job to enforce this:

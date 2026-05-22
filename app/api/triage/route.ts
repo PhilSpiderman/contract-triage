@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/auth';
 import { analyseContract } from '@/lib/claude';
 import { isDemoEnabled } from '@/lib/config';
-
-const MAX_CONTRACT_LENGTH = 100_000;
+import { loadSample } from '@/lib/samples';
+import { hasUserAnalysed, recordUserAnalysis } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
+  // 1. Demo kill switch
   if (!isDemoEnabled()) {
     return NextResponse.json(
       { error: 'The demo is currently paused.', code: 'DEMO_DISABLED' },
@@ -12,6 +14,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // 2. Authentication
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { error: 'Sign in to use the demo.', code: 'UNAUTHENTICATED' },
+      { status: 401 },
+    );
+  }
+  const userId = session.user.id;
+
+  // 3. Parse body
   let body: unknown;
   try {
     body = await req.json();
@@ -19,24 +32,35 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { contractText } = (body as { contractText?: unknown }) ?? {};
-
-  if (typeof contractText !== 'string' || contractText.trim().length === 0) {
-    return NextResponse.json(
-      { error: 'contractText (non-empty string) is required' },
-      { status: 400 },
-    );
+  const { sampleId } = (body as { sampleId?: unknown }) ?? {};
+  if (typeof sampleId !== 'string' || !sampleId) {
+    return NextResponse.json({ error: 'sampleId is required' }, { status: 400 });
   }
 
-  if (contractText.length > MAX_CONTRACT_LENGTH) {
-    return NextResponse.json(
-      { error: `contractText too long (max ${MAX_CONTRACT_LENGTH} chars)` },
-      { status: 400 },
-    );
-  }
-
+  // 4. Load sample (validates it exists)
+  let sample;
   try {
-    const report = await analyseContract(contractText);
+    sample = loadSample(sampleId);
+  } catch {
+    return NextResponse.json({ error: 'Unknown sample' }, { status: 400 });
+  }
+
+  // 5. Per-user rate limit
+  const alreadyAnalysed = await hasUserAnalysed(userId, sampleId);
+  if (alreadyAnalysed) {
+    return NextResponse.json(
+      {
+        error: "You've already analysed this sample.",
+        code: 'ALREADY_ANALYSED',
+      },
+      { status: 409 },
+    );
+  }
+
+  // 6. Run analysis
+  try {
+    const report = await analyseContract(sample.text);
+    await recordUserAnalysis(userId, sampleId);
     return NextResponse.json(report);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Analysis failed';

@@ -134,6 +134,58 @@ a {
   margin: 48px 0 16px;
 }
 
+/* ─── Auth status line (below hero) ─── */
+.auth-status {
+  margin-top: 32px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.auth-status strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.auth-status-cta {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: color 0.15s;
+}
+
+.auth-status-cta:hover {
+  color: var(--accent-deep);
+}
+
+.inline-form {
+  display: inline;
+}
+
+.text-link {
+  color: var(--text-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.text-link:hover {
+  color: var(--accent);
+}
+
 /* ─── Sample picker ─── */
 .sample-list {
   display: grid;
@@ -157,6 +209,33 @@ a {
 .sample-card.selected {
   border-color: var(--accent);
   background: var(--accent-soft);
+}
+
+.sample-card.analysed {
+  opacity: 0.75;
+}
+
+.sample-card.analysed.selected {
+  opacity: 1;
+}
+
+.sample-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sample-badge {
+  font-family: ui-monospace, monospace;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--green-bg);
+  color: var(--green-text);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
 }
 
 .sample-id {
@@ -249,6 +328,30 @@ a {
 
 .demo-paused-banner a {
   color: var(--amber-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ─── All-used banner ─── */
+.all-used-banner {
+  margin: 32px 0 0;
+  padding: 16px 20px;
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  color: var(--text);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.all-used-banner strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.all-used-banner a {
+  color: var(--accent-deep);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -651,6 +754,21 @@ a {
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
+}
+
+.turnstile-wrap {
+  margin: 4px 0;
+  min-height: 65px;
+}
+
+.auth-error {
+  padding: 10px 14px;
+  background: var(--red-bg);
+  border-left: 3px solid var(--red-text);
+  border-radius: 0 4px 4px 0;
+  color: var(--red-text);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .auth-consent {

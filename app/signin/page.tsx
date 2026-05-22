@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation';
 import { signIn, auth } from '@/auth';
 import { isSignupEnabled } from '@/lib/config';
 import { storePendingLead } from '@/lib/leads';
-import { SignupForm } from './signup-form';
+import { verifyTurnstileToken } from '@/lib/turnstile';
+import { SignupForm, type SignupFormState } from './signup-form';
 
 export const metadata = {
   title: 'sign in — contract triage',
@@ -14,17 +15,34 @@ export default async function SignInPage() {
   if (session?.user) redirect('/account');
 
   const signupOpen = isSignupEnabled();
+  const turnstileSiteKey =
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
-  async function submitSignup(formData: FormData) {
+  async function submitSignup(
+    _prev: SignupFormState | null,
+    formData: FormData,
+  ): Promise<SignupFormState> {
     'use server';
 
+    // 1. Captcha first — cheap to verify, blocks bots before any storage writes
+    const token = String(formData.get('cf-turnstile-response') ?? '');
+    if (!token) {
+      return { error: 'Please complete the captcha and try again.' };
+    }
+    const captchaOk = await verifyTurnstileToken(token);
+    if (!captchaOk) {
+      return { error: 'Captcha verification failed. Please refresh and try again.' };
+    }
+
+    // 2. Email validation
     const email = String(formData.get('email') ?? '')
       .trim()
       .toLowerCase();
     if (!email || !email.includes('@')) {
-      throw new Error('Please provide a valid email address.');
+      return { error: 'Please provide a valid email address.' };
     }
 
+    // 3. Capture optional lead data (context fields are consent-conditional)
     const name = String(formData.get('name') ?? '').trim();
     const consent = formData.get('consent') === 'on';
     const role = consent ? String(formData.get('role') ?? '').trim() : '';
@@ -32,7 +50,11 @@ export default async function SignInPage() {
 
     await storePendingLead({ email, name, consent, role, context });
 
+    // 4. Trigger Auth.js sign-in — throws a redirect to /signin/check-email
     await signIn('resend', { email, redirectTo: '/account' });
+
+    // Unreachable — signIn redirected
+    return {};
   }
 
   return (
@@ -53,8 +75,14 @@ export default async function SignInPage() {
           drop Chris a line at{' '}
           <a href="mailto:chris@handsonwith.ai">chris@handsonwith.ai</a>.
         </div>
+      ) : !turnstileSiteKey ? (
+        <div className="demo-paused-banner">
+          <strong>Signup is temporarily misconfigured.</strong> Captcha keys
+          are not set. Drop Chris a line at{' '}
+          <a href="mailto:chris@handsonwith.ai">chris@handsonwith.ai</a>.
+        </div>
       ) : (
-        <SignupForm action={submitSignup} />
+        <SignupForm action={submitSignup} turnstileSiteKey={turnstileSiteKey} />
       )}
 
       <p className="auth-tos">
