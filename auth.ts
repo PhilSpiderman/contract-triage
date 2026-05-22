@@ -40,7 +40,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           context: lead.consent ? lead.context : '',
         });
       } catch (err) {
-        console.error('[auth] Failed to merge lead profile:', err);
+        // Log message only — never the raw err object, which could carry
+        // lead-profile fields (name/role/context) in a wrapped stack.
+        const message = err instanceof Error ? err.message : String(err);
+        console.error('[auth] Failed to merge lead profile:', message);
         // Don't rethrow — user can still sign in even if profile merge fails.
       }
     },

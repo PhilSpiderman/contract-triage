@@ -56,7 +56,10 @@ export async function verifyTurnstileToken(
     }
     return data.success;
   } catch (err) {
-    console.error('[turnstile] siteverify request error:', err);
+    // Log message only — the fetch body contains the Turnstile secret;
+    // a raw err object could include it in a wrapped stack.
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[turnstile] siteverify request error:', message);
     return false;
   }
 }
