@@ -20,6 +20,8 @@ import type { TriageReport } from './types';
 
 const TTL_SECONDS = 6 * 60 * 60;
 const KEY_PREFIX = 'triage:v1';
+const HITS_KEY = 'metrics:cache:hits';
+const MISSES_KEY = 'metrics:cache:misses';
 
 function key(sampleId: string): string {
   const { version } = loadPlaybook();
@@ -32,6 +34,13 @@ export async function getCachedReport(
   try {
     const redis = getRedis();
     const cached = await redis.get<TriageReport>(key(sampleId));
+    // INCR a counter for admin-view cost sanity. Wrapped in its own try so
+    // a metric failure can never block a cache result.
+    try {
+      await redis.incr(cached ? HITS_KEY : MISSES_KEY);
+    } catch {
+      /* metric is best-effort */
+    }
     return cached ?? null;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

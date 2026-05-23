@@ -988,3 +988,74 @@ a {
     padding-left: 32px;
   }
 }
+
+/* ─── Admin (internal, basic-auth gated) ─── */
+
+.admin {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.admin-header {
+  margin-bottom: 32px;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 16px;
+}
+
+.admin-header h1 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.admin-sub {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.admin-section {
+  margin-bottom: 32px;
+}
+
+.admin-section h2 {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: #333;
+}
+
+.admin-dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 16px;
+  margin: 0;
+  font-size: 15px;
+}
+
+.admin-dl dt {
+  color: #555;
+}
+
+.admin-dl dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  text-align: right;
+}
+
+.admin-footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e5e5;
+  color: #888;
+  font-size: 13px;
+}
+
+.admin-footer p {
+  margin: 0;
+}

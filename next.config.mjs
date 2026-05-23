@@ -18,6 +18,7 @@ const SECRET_KEYS = [
   'AUTH_SECRET',
   'TURNSTILE_SECRET_KEY',
   'NEXT_PUBLIC_TURNSTILE_SITE_KEY',
+  'ADMIN_PASSWORD',
 ];
 
 const secretsPath = path.resolve(
