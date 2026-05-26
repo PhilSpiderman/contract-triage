@@ -5,6 +5,7 @@ import { isDemoEnabled } from '@/lib/config';
 import { loadSample } from '@/lib/samples';
 import { hasUserAnalysed, recordUserAnalysis } from '@/lib/rate-limit';
 import { getCachedReport, setCachedReport } from '@/lib/triage-cache';
+import { recordActivity } from '@/lib/last-active';
 
 export async function POST(req: NextRequest) {
   // 1. Demo kill switch
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
   const cached = await getCachedReport(sampleId);
   if (cached) {
     await recordUserAnalysis(userId, sampleId);
+    await stampActivity(userId);
     return NextResponse.json(cached);
   }
 
@@ -70,10 +72,23 @@ export async function POST(req: NextRequest) {
     const report = await analyseContract(sample.text);
     await recordUserAnalysis(userId, sampleId);
     await setCachedReport(sampleId, report);
+    await stampActivity(userId);
     return NextResponse.json(report);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Analysis failed';
     console.error('Triage failed:', message);
     return NextResponse.json({ error: 'Analysis failed' }, { status: 500 });
+  }
+}
+
+// last-active update is best-effort: a transient Redis failure here should
+// not bubble up and fail an already-successful analysis. The 12-month
+// deletion clock will still advance via the next successful call.
+async function stampActivity(userId: string): Promise<void> {
+  try {
+    await recordActivity(userId);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.warn('last-active stamp failed:', message);
   }
 }

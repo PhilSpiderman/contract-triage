@@ -61,6 +61,10 @@ export default async function AccountPage() {
           sign out
         </button>
       </form>
+
+      <p className="auth-danger-link">
+        <Link href="/account/delete">Delete my account →</Link>
+      </p>
     </main>
   );
 }

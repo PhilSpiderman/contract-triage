@@ -4,6 +4,7 @@ import { UpstashRedisAdapter } from '@auth/upstash-redis-adapter';
 import { getRedis } from './lib/redis';
 import { sendMagicLinkEmail } from './lib/auth-email';
 import { consumePendingLead, storeLeadProfile } from './lib/leads';
+import { recordActivity } from './lib/last-active';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: UpstashRedisAdapter(getRedis()),
@@ -26,10 +27,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   events: {
     async createUser({ user }) {
       // Fires once, the first time a user verifies their magic link and an
-      // account is created in Upstash. Merge any pending lead-capture data
-      // captured at signup time into a per-user profile record.
+      // account is created in Upstash. Two side-effects:
+      //   - Merge any pending lead-capture data captured at signup time
+      //   - Stamp last-active to now so the 12-month inactivity clock starts
+      if (!user.id) return;
+
+      // Stamp last-active first — small, independent, must not be skipped
+      // by a downstream lead-merge failure.
       try {
-        if (!user.email || !user.id) return;
+        await recordActivity(user.id);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error('[auth] Failed to stamp initial last-active:', message);
+      }
+
+      try {
+        if (!user.email) return;
         const lead = await consumePendingLead(user.email);
         if (!lead) return;
         await storeLeadProfile(user.id, {
